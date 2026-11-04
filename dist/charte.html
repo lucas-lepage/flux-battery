@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Charte et données — FLUX</title>
+<meta name="description" content="Fonctionnement de FLUX, accès aux données, utilisation de la caméra, conservation et suppression.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="policy-page">
+<main class="policy-main">
+<a class="policy-back" href="/">← Retour à l’application</a>
+<article class="card policy-document">
+<div class="label">FLUX / BATTERY PASSPORT</div>
+<h1>Charte et données</h1>
+<p class="policy-intro">Comment fonctionne l’application et ce qui est fait des informations enregistrées.</p>
+<p class="small">Version du 4 novembre 2026</p>
+
+<h2>À quoi sert FLUX ?</h2>
+<p>FLUX permet d’identifier une batterie par QR code puis de suivre son diagnostic, le signalement du mécanicien, la réponse du responsable, la réception, l’inspection et la décision du recycleur. Les recommandations comparent quatre orientations. La décision finale est validée par une personne.</p>
+<p>Les seuils et les scores sont ceux d’un prototype pédagogique. Ils ne constituent pas une certification technique. Les signatures des rapports sont des visas graphiques de démonstration, sans authentification électronique des personnes.</p>
+
+<h2>Quelles données sont enregistrées ?</h2>
+<p>Le passeport contient l’identifiant et le numéro de série de la batterie, le constructeur, le responsable, les caractéristiques du pack et de ses modules. Les formulaires ajoutent les constats techniques, demandes, réponses, destinations, inspections, décisions, rôles intervenants et dates des étapes.</p>
+<p>Le serveur utilise aussi l’adresse de connexion reçue pour limiter les tentatives d’authentification infructueuses.</p>
+<p>Les champs libres sont destinés aux observations techniques. Les comptes sont des comptes métier : mécanicien, responsable et recycleur.</p>
+
+<h2>Qui peut y accéder ?</h2>
+<p>L’application est hébergée sur Render et les dossiers sont stockés dans Neo4j Aura. L’accès aux dossiers et aux exports nécessite une connexion. Les actions sont contrôlées côté serveur selon le rôle. Les conseils et les détails de l’inspection sont réservés au recycleur.</p>
+<p>Les personnes qui administrent l’instance et les services d’hébergement interviennent aussi dans son fonctionnement. Les mots de passe des comptes sont configurés sur le serveur et ne sont pas inclus dans les QR codes.</p>
+
+<h2>Caméra, photos et QR codes</h2>
+<p>La caméra n’est utilisée que lorsque vous l’activez. Les images et les photos choisies sont décodées dans le navigateur ; elles ne sont pas envoyées à l’application serveur. Seul le contenu décodé du QR est transmis pour retrouver le dossier ou préparer son ajout. La création d’un nouveau passeport nécessite une confirmation.</p>
+<p>Un QR imprimé contient les informations initiales de la batterie : toute personne disposant de ce QR peut les lire. Le statut à jour est consulté dans l’application après connexion.</p>
+
+<h2>Connexion et cookies</h2>
+<p>Un cookie de session, <code>flux_session</code>, permet de rester connecté pendant huit heures au maximum. Il ne sert pas à la publicité. Un changement de compte ou un redémarrage du serveur invalide la session précédente.</p>
+<p>Cette version n’intègre ni publicité ni outil de mesure d’audience. Les lecteurs QR, les scripts et les polices utilisés par l’application sont fournis avec le projet.</p>
+
+<h2>Conservation, rapports et suppression</h2>
+<p>La version actuelle ne comporte pas de suppression automatique des dossiers après un délai. Le classement dans « Terminées » conserve le dossier, son historique et son rapport.</p>
+<p>Le responsable peut supprimer une batterie depuis sa fiche, après confirmation. Cette action efface le passeport et ses éléments propres : modules, événements, demandes, transferts, inspections et décisions. Les références partagées, comme les acteurs, les centres de tri et les demandes du marché, sont conservées.</p>
+<p>Le PDF est généré au moment du téléchargement. Supprimer le dossier n’efface pas les PDF déjà téléchargés ni les éventuelles sauvegardes des hébergeurs, dont la gestion dépend des services utilisés.</p>
+
+<h2>Responsable et demandes concernant les données</h2>
+<!-- Avant un usage avec des données personnelles réelles, renseigner l’identité et les coordonnées effectives de l’éditeur / responsable de traitement, sa base légale et sa politique de conservation. Ne pas attribuer ce rôle à l’établissement sans validation. -->
+<p>Cette instance est administrée par l’équipe du projet FLUX qui vous a communiqué l’accès. Pour demander l’accès à des informations vous concernant, leur rectification ou leur suppression, adressez-vous à votre contact au sein de cette équipe.</p>
+<p>Les informations de référence sur vos droits et la possibilité d’adresser une réclamation sont disponibles auprès de la <a href="https://www.cnil.fr/fr/respecter-les-droits-des-personnes" target="_blank" rel="noopener noreferrer">CNIL</a>.</p>
+</article>
+<footer>FLUX / Battery Passport <a href="/">Retour à l’application</a></footer>
+</main>
+</body>
+</html>

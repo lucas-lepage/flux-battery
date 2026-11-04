@@ -134,3 +134,11 @@ Le suivi affiche des libellés espacés sur une ou deux lignes et une silhouette
 Les espaces Responsable et Recycleur proposent les filtres En cours, Terminées et Toutes, avec un compteur pour chaque catégorie. En cours s’affiche par défaut. Une batterie rejoint Terminées après validation de la décision finale du recycleur (stade 5 du parcours). Le suivi, les signatures et le rapport restent accessibles. Aucun passeport n’est supprimé par ce classement.
 
 La recherche s’applique au filtre sélectionné. Le scan d’une batterie terminée ouvre sa catégorie automatiquement. Le mécanicien conserve la liste complète et ne voit pas ces filtres. Ce changement est uniquement dans l’interface et ne nécessite aucune modification de la base.
+
+## Charte et données
+
+Un lien discret Charte et données figure dans le pied de page et dans le formulaire de connexion. Il ouvre /charte.html dans un nouvel onglet. Cette page publique ne donne accès à aucun dossier et explique les données enregistrées, les rôles, la caméra, le cookie de session, les hébergeurs, les rapports et la suppression. Aucun bandeau ou consentement supplémentaire n’a été ajouté.
+
+Avant d’utiliser des données personnelles réelles, compléter dist/charte.html avec l’identité et les coordonnées effectives du responsable, la base légale retenue et les durées / critères de conservation applicables, ainsi que les informations d’hébergement et transferts correspondant aux comptes réellement utilisés. La page décrit le fonctionnement technique ; elle ne constitue pas à elle seule une mise en conformité juridique.
+
+Référence : https://www.cnil.fr/fr/conformite-rgpd-information-des-personnes-et-transparence
