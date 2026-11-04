@@ -1,103 +1,100 @@
-# FLUX — Déploiement AuraDB + Render sans installation
+# FLUX — Parcours par rôle et ajout par QR
 
-Cette version exige une véritable base Neo4j. Aucune donnée de secours dans le navigateur et aucun Docker ne sont nécessaires. Tout se configure dans votre navigateur. Le serveur s'arrête au démarrage si Neo4j n'est pas joignable.
+Cette version utilise une vraie base Neo4j. Les données et l'historique existants restent dans Aura. Les nouveaux passeports commencent par le scan du mécanicien. Aucun Docker ni logiciel à installer sur les postes utilisateurs.
 
-## 1. Remplir la base Aura (facultatif avant Render)
+## Mettre à jour le site Render existant
 
-Dans AuraDB > FLUX-Battery > Connect > Query, connectez-vous avec l'utilisateur neo4j et le mot de passe téléchargé lors de la création.
+1. Décompresser le ZIP.
+2. Dans le dépôt GitHub `flux-battery`, aller à la racine puis **Add file > Upload files**.
+3. Envoyer le contenu du dossier décompressé, en conservant les dossiers `dist`, `docs`, `tools` et `tests`. Les fichiers portant le même nom remplacent les versions existantes. Ne pas envoyer le ZIP.
+4. Attendre la fin de tous les transferts puis faire **Commit changes**.
+5. Render redéploie. Sinon : **Manual Deploy > Deploy latest commit**.
+6. Au démarrage, les référentiels et les anciennes demandes sont complétés automatiquement. Aucune réinitialisation de la base n'est nécessaire.
 
-Ouvrez `IMPORT_AURA.cypher` dans le Bloc-notes, copiez tout puis collez dans l'éditeur Query. Exécutez le script. Le résultat attendu est : 5 batteries, 25 modules, 4 demandes et 5 événements vérifiés. Une réexécution ne remet pas à zéro les batteries déjà modifiées.
+Variables Render conservées : NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD, NEO4J_DATABASE, HOST=0.0.0.0, COOKIE_SECURE=true et NODE_VERSION=22.
 
-Le serveur peut aussi effectuer automatiquement cet import au premier déploiement. Il crée en plus les contraintes d'unicité. Le script manuel permet de vérifier dès maintenant le contenu de la base.
+Trois mots de passe différents, de 12 caractères minimum :
 
-## 2. Déposer le code sur GitHub
-
-1. Extraire le ZIP.
-2. Créer un dépôt GitHub, par exemple `flux-battery`.
-3. Choisir **Add file > Upload files**.
-4. Glisser le contenu du dossier extrait dans la zone d'import, y compris les dossiers `dist`, `docs` et `tests`.
-5. Vérifier que `package.json`, `package-lock.json`, `server.cjs`, `start.cjs`, `db.cjs`, `seed.cjs`, `workflow.cjs` et `render.yaml` apparaissent directement à la racine du dépôt.
-6. Valider avec **Commit changes**.
-
-Aucun fichier d'identifiants Aura ne doit être ajouté au dépôt.
-
-## 3. Créer un Web Service Render
-
-Dans https://dashboard.render.com/ : **New > Web Service**, connecter le dépôt GitHub, puis choisir les valeurs suivantes :
-
-| Réglage | Valeur |
+| Variable | Compte |
 | --- | --- |
-| Language / Runtime | Node |
-| Branch | main |
-| Root Directory | Laisser vide si package.json est à la racine |
-| Build Command | `npm ci` |
-| Start Command | `npm start` |
-| Instance Type | Free |
+| MECHANIC_PASSWORD | mechanic |
+| OWNER_PASSWORD | owner |
+| RECYCLER_PASSWORD | recycler |
 
-Configurer les variables suivantes dans **Environment** :
+APP_PASSWORD n'est plus utilisé. Ne jamais envoyer les identifiants Aura dans GitHub.
 
-| Variable | Valeur |
-| --- | --- |
-| NEO4J_URI | Connection URI du fichier Aura, commence par `neo4j+s://` |
-| NEO4J_USERNAME | `neo4j` |
-| NEO4J_PASSWORD | Mot de passe téléchargé lors de la création Aura |
-| NEO4J_DATABASE | `neo4j` |
-| APP_PASSWORD | Mot de passe choisi pour les trois comptes de démonstration, au moins 12 caractères |
-| HOST | `0.0.0.0` |
-| COOKIE_SECURE | `true` |
-| NODE_VERSION | `22` |
+## Imprimer les QR codes
 
-Render fournit automatiquement PORT. Ne pas recopier le mot de passe Aura dans APP_PASSWORD : ce sont deux accès distincts.
+Ouvrir **`dist/imprimer-qrcodes.html`** sur le PC, ou **`/imprimer-qrcodes.html`** sur le site mis à jour. Cliquer sur Imprimer. La page est autonome : les QR sont inclus dans le fichier.
 
-Lancer **Deploy Web Service**. Quand les journaux affichent « FLUX connecté à Neo4j », ouvrir l'URL que Render fournit. Son nom exact dépend de la disponibilité sur Render. Le fichier `render.yaml` peut également servir pour un déploiement Blueprint.
+Cinq exemples sont fournis : BP-SCAN-001 à BP-SCAN-005. Ils ont des identifiants et numéros de série distincts des anciennes batteries BP-001 à BP-005. Chaque QR contient les données exactes de son passeport d'exemple, avec les cinq modules. Le fichier `dist/qr-passports.json` contient ces mêmes données en clair. Les PNG et SVG individuels figurent dans `dist/qrcodes`.
 
-## 4. Démonstration
+Pour produire des codes à partir de vos propres données, conserver le format de `dist/qr-passports.json` puis régénérer avec `node tools/generate-qr-cards.cjs` sur une machine de développement ou dans un environnement cloud disposant de Node. Les valeurs ne doivent pas être inventées pour de vraies batteries. Les cinq codes livrés sont explicitement des exemples pédagogiques.
 
-Comptes : `mechanic`, `owner` et `recycler`, tous avec le mot de passe APP_PASSWORD choisi dans Render.
+## Mécanicien — scan, diagnostic et signalement
 
-1. Compte mechanic : choisir BP-003 puis transmettre le diagnostic.
-2. Guide de démo > Changer de compte, puis se connecter avec owner.
-3. Valider Original > Waste puis enregistrer le transfert.
-4. Se connecter avec recycler, confirmer la réception puis enregistrer l'inspection.
-5. Ouvrir l'aide à la décision, comparer les quatre orientations, changer les poids si nécessaire.
-6. Justifier et valider une orientation admissible. BP-003 recommande initialement Repurpose.
-7. Consulter la traçabilité et vérifier les nœuds Decision dans Aura.
+1. Se connecter avec mechanic.
+2. Cliquer sur Scanner un QR code. Autoriser la caméra, ou choisir Lire une photo. Une saisie du contenu du QR est également disponible comme solution de secours.
+3. Vérifier les informations décodées puis cliquer Ajouter ce passeport.
+4. Neo4j crée le passeport au statut Original et ses cinq modules. Les doublons d'identifiant ou de numéro de série sont détectés.
+5. Sur la fiche : identification, statut, SOH et historique en lecture seule.
+6. Saisir uniquement le diagnostic / motif puis cliquer Signaler hors d'usage.
+7. Une demande PENDING apparaît pour le responsable. Le statut reste Original et les mesures ne changent pas.
 
-Les QR codes sont générés par le serveur avec l'adresse actuelle du site Render. Ils n'ouvrent pas le site ChatGPT.
+Aucune recommandation, aucun score et aucun menu de décision dans cet espace.
 
-## 5. Afficher le graphe dans Aura
+## Responsable — demandes, validation ou refus
 
-```cypher
-MATCH (b:Battery)-[r]->(n) RETURN b,r,n;
-```
+1. Se connecter avec owner. L'espace s'ouvre sur Demandes reçues.
+2. Examiner la demande du garage et son motif.
+3. Choisir un centre agréé dans le référentiel puis valider : Neo4j passe le statut à Waste et enregistre la destination dans la même opération.
+4. Ou refuser avec un motif : le statut reste Original. Le mécanicien peut apporter des précisions et envoyer un nouveau signalement.
+5. Le suivi reste disponible. Aucune recommandation ou inspection détaillée de recyclage n'est transmise à ce rôle.
 
-Après validation d'une décision :
+Les centres livrés sont fictifs et servent à démontrer la vérification d'agrément. Le serveur refuse un centre marqué non agréé, même si une requête est envoyée manuellement.
 
-```cypher
-MATCH (b:Battery)-[:HAS_DECISION]->(d:Decision)
-RETURN b.id,d.orientation,d.justification;
-```
+## Recycleur — réception, inspection puis décision
 
-## 6. Contenu et limites
+1. Se connecter avec recycler et scanner le code d'une batterie déjà enregistrée.
+2. Le statut affiché vient de Neo4j : Original bloque la réception avec un message rouge. Waste permet la confirmation quand une destination agréée est enregistrée.
+3. Après réception : chimie, âge, cycles et SOH préremplis en lecture seule. Le technicien renseigne les modules sains, les défauts et les constats visuels.
+4. L'inspection est un objet distinct du passeport. Elle ne réécrit pas les informations initiales imprimées.
+5. Après enregistrement de l'inspection seulement : quatre orientations, scores, pondérations et explications.
+6. Choisir une orientation admissible et justifier la décision. Neo4j conserve les résultats, les données de l'inspection et les paramètres du calcul.
 
-Cas principal + défi 3 : trois rôles, cinq batteries avec cinq modules, quatre demandes du marché et quatre orientations. Les règles et pondérations sont décrites dans `docs/decision.md`. Les scores économiques et environnementaux sont des hypothèses pédagogiques, sans certification industrielle. Le centre de tri doit valider la décision.
+Le menu de décision est masqué tant que l'inspection de la batterie sélectionnée manque. Le serveur bloque aussi le calcul et la validation prématurés. Les réponses destinées au mécanicien et au responsable ne contiennent ni scores ni recommandation. Ils voient seulement que l'étape du centre de tri est terminée.
 
-Neo4j conserve toutes les données, même si Render redémarre. Les sessions sont en mémoire et demandent une reconnexion après redémarrage. Les trois comptes partagent un mot de passe uniquement pour la démonstration. Une application de production nécessiterait des comptes individuels et une gestion des autorisations sur les passeports.
+## Changer de compte et garder le suivi
 
-Sur Render Free, le service se met en veille après 15 minutes sans visite. Une visite déclenche son réveil, qui peut prendre environ une minute. AuraDB Free se met automatiquement en pause après 72 heures sans activité. Il faut la reprendre depuis Aura avant la démonstration. Une instance Aura Free laissée en pause plus de 30 jours peut être supprimée. Conserver vos exports.
+Utiliser le sélecteur en haut à droite, puis saisir le mot de passe du compte choisi. La batterie sélectionnée reste la même. La page s'adapte au rôle. L'historique reste accessible pour les trois acteurs.
 
-Les diapositives PowerPoint et leur version HTML figurent dans dist. Le script d'import est aussi exécuté automatiquement au démarrage sans écraser les passeports existants.
+## QR et statut vivant
 
-## Développement et vérifications
+Le format est un JSON `FLUX-PASSPORT`, version 1. Il contient identité, fabricant, responsable, chimie, capacité, âge, cycles, SOH, résistances, défaut initial et cinq modules. Pas de mot de passe ni de lien de connexion.
 
-Les utilisateurs finaux n'ont rien à installer. Pour les développeurs disposant d'un environnement Node : `npm ci`, `npm test`, puis configurer les variables et `npm start`.
+Un QR imprimé représente les informations à l'émission. Après le premier ajout, un nouveau scan ouvre la fiche existante et utilise le statut vivant de Neo4j. Le QR ne remet donc jamais une batterie Waste à Original. Les anciens QR contenant uniquement une URL de fiche sont encore utilisables pour ouvrir un passeport déjà présent, mais pas pour créer un nouveau passeport.
 
-`tests/neo4j-integration.cjs` cible exclusivement une base de test vide et fait avancer BP-003. Ne pas l'exécuter sur la base de démonstration déjà utilisée.
+La création est réservée au mécanicien et nécessite confirmation après aperçu. Le JSON est validé côté serveur. Les identifiants de modules sont reconstruits à partir du passeport afin d'éviter de modifier les modules d'une autre batterie. Ce PoC ne vérifie pas de signature électronique du fabricant.
+
+## Migration
+
+Les anciens passeports sont conservés. Une ancienne demande au stade diagnostic devient une demande en attente. Les anciennes inspections et décisions restent consultables. Les nouveaux référentiels n'écrasent pas les données existantes. Sur une base vide, aucun passeport n'est créé automatiquement : la première batterie arrive par scan.
+
+L'ancien IMPORT_AURA.cypher n'est pas nécessaire pour cette version. Ne pas réinitialiser ou supprimer la base pour appliquer la mise à jour.
+
+## Tests
+
+- `npm test` : règles de rôle et format QR.
+- `node tests/roles-neo4j.cjs` : intégration sur une base Neo4j de test vide dédiée. Ce test ajoute des données et fait évoluer les statuts ; ne pas l'exécuter sur la base de démonstration réelle.
+- Les cinq PNG QR livrés ont été décodés pour vérifier le contenu.
+- Le parcours a été contrôlé dans le navigateur. La caméra physique devra être essayée sur votre tablette ou téléphone ; la fonction photo et le repli texte évitent de dépendre d'une caméra sur PC.
+
+## Limites
+
+Les mots de passe des comptes sont des secrets Render, distincts des accès Aura. Les sessions expirent au bout de huit heures et après redémarrage du serveur. La classification, les seuils et les notes restent pédagogiques et ne certifient pas l'aptitude réelle d'une batterie. Les données d'exemple ne décrivent pas de vraies batteries.
 
 ## Sources techniques
 
-- https://neo4j.com/docs/javascript-manual/current/connect/
-- https://neo4j.com/docs/javascript-manual/current/transactions/
-- https://render.com/docs/free
-- https://render.com/docs/blueprint-spec
-- https://neo4j.com/docs/aura/managing-instances/instance-actions/
+- https://neo4j.com/docs/javascript-manual/current/
+- https://scanapp.org/html5-qrcode-docs/docs/apis/classes/Html5Qrcode
+- https://render.com/docs/web-services

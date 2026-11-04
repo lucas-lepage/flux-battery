@@ -22,5 +22,9 @@ services:
         sync: false
       - key: NEO4J_DATABASE
         value: neo4j
-      - key: APP_PASSWORD
+      - key: MECHANIC_PASSWORD
+        sync: false
+      - key: OWNER_PASSWORD
+        sync: false
+      - key: RECYCLER_PASSWORD
         sync: false

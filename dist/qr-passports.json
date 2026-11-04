@@ -1,0 +1,287 @@
+[
+  {
+    "format": "FLUX-PASSPORT",
+    "version": 1,
+    "passport": {
+      "id": "BP-SCAN-001",
+      "model": "DeLorean · Flux Pack",
+      "owner": "Flux Industries",
+      "chemistry": "NMC",
+      "soh": 88,
+      "age": 3,
+      "fault": "none",
+      "resistance": 2.8,
+      "maxResistance": 4,
+      "cycles": 350,
+      "capacity": 75,
+      "manufacturer": "Flux Industries",
+      "serial": "FLUX-SCAN-001",
+      "status": "Original",
+      "modules": [
+        {
+          "id": "BP-SCAN-001-M1",
+          "soh": 90,
+          "resistance": 2.9,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-001-M2",
+          "soh": 89,
+          "resistance": 2.8,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-001-M3",
+          "soh": 88,
+          "resistance": 2.7,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-001-M4",
+          "soh": 86,
+          "resistance": 3.0,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-001-M5",
+          "soh": 89,
+          "resistance": 2.8,
+          "fault": "none",
+          "visual": "RAS visuel"
+        }
+      ]
+    }
+  },
+  {
+    "format": "FLUX-PASSPORT",
+    "version": 1,
+    "passport": {
+      "id": "BP-SCAN-002",
+      "model": "CityRide · E-Bike",
+      "owner": "Flux Industries",
+      "chemistry": "NMC",
+      "soh": 66,
+      "age": 6,
+      "fault": "major",
+      "resistance": 4.2,
+      "maxResistance": 4,
+      "cycles": 760,
+      "capacity": 12,
+      "manufacturer": "Flux Industries",
+      "serial": "FLUX-SCAN-002",
+      "status": "Original",
+      "modules": [
+        {
+          "id": "BP-SCAN-002-M1",
+          "soh": 68,
+          "resistance": 4.3,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-002-M2",
+          "soh": 67,
+          "resistance": 4.2,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-002-M3",
+          "soh": 66,
+          "resistance": 4.1,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-002-M4",
+          "soh": 64,
+          "resistance": 4.4,
+          "fault": "major",
+          "visual": "Anomalie signalée"
+        },
+        {
+          "id": "BP-SCAN-002-M5",
+          "soh": 67,
+          "resistance": 4.2,
+          "fault": "none",
+          "visual": "RAS visuel"
+        }
+      ]
+    }
+  },
+  {
+    "format": "FLUX-PASSPORT",
+    "version": 1,
+    "passport": {
+      "id": "BP-SCAN-003",
+      "model": "Atlas · Stationary",
+      "owner": "Flux Industries",
+      "chemistry": "LFP",
+      "soh": 73,
+      "age": 7,
+      "fault": "minor",
+      "resistance": 3.5,
+      "maxResistance": 4,
+      "cycles": 1170,
+      "capacity": 12,
+      "manufacturer": "Flux Industries",
+      "serial": "FLUX-SCAN-003",
+      "status": "Original",
+      "modules": [
+        {
+          "id": "BP-SCAN-003-M1",
+          "soh": 75,
+          "resistance": 3.6,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-003-M2",
+          "soh": 74,
+          "resistance": 3.5,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-003-M3",
+          "soh": 73,
+          "resistance": 3.4,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-003-M4",
+          "soh": 71,
+          "resistance": 3.7,
+          "fault": "minor",
+          "visual": "Anomalie signalée"
+        },
+        {
+          "id": "BP-SCAN-003-M5",
+          "soh": 74,
+          "resistance": 3.5,
+          "fault": "none",
+          "visual": "RAS visuel"
+        }
+      ]
+    }
+  },
+  {
+    "format": "FLUX-PASSPORT",
+    "version": 1,
+    "passport": {
+      "id": "BP-SCAN-004",
+      "model": "DeLorean · Critical",
+      "owner": "Flux Industries",
+      "chemistry": "NMC",
+      "soh": 35,
+      "age": 11,
+      "fault": "critical",
+      "resistance": 8.4,
+      "maxResistance": 4,
+      "cycles": 1580,
+      "capacity": 75,
+      "manufacturer": "Flux Industries",
+      "serial": "FLUX-SCAN-004",
+      "status": "Original",
+      "modules": [
+        {
+          "id": "BP-SCAN-004-M1",
+          "soh": 37,
+          "resistance": 8.5,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-004-M2",
+          "soh": 36,
+          "resistance": 8.4,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-004-M3",
+          "soh": 35,
+          "resistance": 8.3,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-004-M4",
+          "soh": 33,
+          "resistance": 8.6,
+          "fault": "critical",
+          "visual": "Anomalie signalée"
+        },
+        {
+          "id": "BP-SCAN-004-M5",
+          "soh": 36,
+          "resistance": 8.4,
+          "fault": "none",
+          "visual": "RAS visuel"
+        }
+      ]
+    }
+  },
+  {
+    "format": "FLUX-PASSPORT",
+    "version": 1,
+    "passport": {
+      "id": "BP-SCAN-005",
+      "model": "Metro · End of Life",
+      "owner": "Flux Industries",
+      "chemistry": "LFP",
+      "soh": 38,
+      "age": 13,
+      "fault": "major",
+      "resistance": 6.3,
+      "maxResistance": 4,
+      "cycles": 1990,
+      "capacity": 12,
+      "manufacturer": "Flux Industries",
+      "serial": "FLUX-SCAN-005",
+      "status": "Original",
+      "modules": [
+        {
+          "id": "BP-SCAN-005-M1",
+          "soh": 40,
+          "resistance": 6.4,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-005-M2",
+          "soh": 39,
+          "resistance": 6.3,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-005-M3",
+          "soh": 38,
+          "resistance": 6.2,
+          "fault": "none",
+          "visual": "RAS visuel"
+        },
+        {
+          "id": "BP-SCAN-005-M4",
+          "soh": 36,
+          "resistance": 6.5,
+          "fault": "major",
+          "visual": "Anomalie signalée"
+        },
+        {
+          "id": "BP-SCAN-005-M5",
+          "soh": 39,
+          "resistance": 6.3,
+          "fault": "none",
+          "visual": "RAS visuel"
+        }
+      ]
+    }
+  }
+]
