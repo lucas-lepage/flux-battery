@@ -4,15 +4,11 @@ const statusNames={Original:'En service',Waste:'Hors d’usage',Oriented:'Orient
 const faults={none:'Aucun',minor:'Mineur',major:'Majeur',critical:'Critique'};
 const date=v=>v?new Date(v).toLocaleString('fr-FR',{timeZone:'Europe/Paris',dateStyle:'short',timeStyle:'short'}):'Non renseignée';
 const fr=v=>String(v??'').replace(/\b(Original|Waste|Oriented|Reuse|Remanufacture|Repurpose|Recycle)\b/g,k=>statusNames[k]||E.orientationInfo[k]?.label||k);
-function signaturesFor(b){
- const requests=b.requests||[],last=xs=>xs.at(-1);
- const mechanic=last(requests)||(b.diagnostic?.at?b.diagnostic:null),owner=last(requests.filter(r=>r.decidedAt))||last((b.events||[]).filter(e=>['waste','refuse','transfer'].includes(e.action)&&e.actorId==='owner')),recycler=b.decision?.at||b.inspection?.at||b.transfer?.receivedAt;
- return [mechanic&&{role:'Mécanicien',name:'Garage Flux',at:mechanic.at},owner&&{role:'Responsable',name:'Responsable du passeport',at:owner.decidedAt||owner.at},recycler&&{role:'Recycleur',name:'Centre de tri',at:recycler}].filter(Boolean);
-}
+const {signaturesFor}=require('./signatures.cjs');
 function reportSections(b){
  return {diagnostics:(b.requests||[]).length>0,transfer:!!b.transfer,received:!!b.transfer?.receivedAt,inspection:!!b.inspection,decision:!!b.decision,signatures:signaturesFor(b)};
 }
-async function generateReport(b,{generatedAt=new Date()}={}){
+async function generateReport(b,{generatedAt=new Date(),signatures:recordedSignatures}={}){
  const doc=new PDFDocument({size:'A4',margins:{top:44,bottom:48,left:44,right:44},bufferPages:true,info:{Title:'Rapport de suivi - '+b.id,Author:'FLUX - Démonstration',Subject:'État du parcours à la date d’édition - signatures fictives'}});
  const chunks=[];const finished=new Promise((resolve,reject)=>{doc.on('data',c=>chunks.push(c));doc.on('end',()=>resolve(Buffer.concat(chunks)));doc.on('error',reject);});
  doc.registerFont('Body',path.join(__dirname,'assets/fonts/DejaVuSans.ttf'));doc.registerFont('Bold',path.join(__dirname,'assets/fonts/DejaVuSans-Bold.ttf'));
@@ -39,7 +35,7 @@ async function generateReport(b,{generatedAt=new Date()}={}){
  else if(b.inspected){heading('4. Inspection du recycleur');text('Inspection enregistrée. Les détails techniques sont réservés au compte recycleur.');}
  if(b.decision){heading('5. Décision du centre de tri');pair('Décision enregistrée le',date(b.decision.at));if(b.decision.orientation){const info=E.orientationInfo[b.decision.orientation];text(info?.label||b.decision.orientation,{bold:true});if(info)text(info.description);pair('Justification',b.decision.justification);if(b.decision.recommendation?.scores)table(['Orientation','Score','Résultat'],b.decision.recommendation.scores.map(s=>[E.orientationInfo[s.name]?.label||s.name,s.eligible?s.score+' / 100':'- ',s.eligible?'Admissible':'Exclue : '+s.reasons.join(' ')]),[.4,.16,.44]);if(info)pair('Prochaine action',info.next);}else text('Orientation validée par le centre de tri. Le détail de la décision est réservé au compte recycleur.');text('La décision est enregistrée ; ce document ne certifie pas la réalisation du traitement physique.',{size:8,color:muted});}
  if(b.events?.length){heading('Historique des étapes réalisées');for(const e of b.events)text(date(e.at)+' - '+e.title,{size:8});}
- const signatures=signaturesFor(b);
+ const signatures=recordedSignatures||signaturesFor(b);
  if(signatures.length){
   const signatureHeight=118;if(y+signatureHeight>bottom())newPage();y=Math.max(y+12,bottom()-signatureHeight);
   doc.moveTo(x,y).lineTo(x+width,y).strokeColor('#cbd5e4').stroke();y+=10;

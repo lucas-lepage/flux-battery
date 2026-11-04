@@ -1,4 +1,5 @@
 const E=require('./dist/engine.js'),{randomUUID}=require('node:crypto');
+const {signatureRecords}=require('./signatures.cjs');
 const roles={mechanic:'Garage Flux',owner:'Responsable constructeur',recycler:'Centre de tri'};
 const DEFAULT_CENTERS=[{id:'SC-HV',name:'Centre de tri Hill Valley',city:'Hill Valley',approved:true},{id:'SC-GC',name:'GreenCycle · centre de démonstration',city:'Lyon',approved:true},{id:'SC-NO',name:'Centre non agréé · démonstration',city:'Paris',approved:false}];
 function fail(message,status=400){const err=Error(message);err.status=status;throw err;}
@@ -11,6 +12,7 @@ function normalize(b){
  if(b.transfer){b.transfer.id=b.transfer.id||'legacy-transfer-'+b.id;b.transfer.centerId=b.transfer.centerId||DEFAULT_CENTERS.find(c=>c.name===b.transfer.destination)?.id||'';b.transfer.state=b.stage>=4?'RECEIVED':'PLANNED';}
  if(b.inspected&&!b.inspection)b.inspection={id:'legacy-inspection-'+b.id,at:b.events?.findLast(e=>e.title==='Inspection du centre de tri')?.at||new Date().toISOString(),note:'Inspection antérieure conservée',metrics:metrics(b),modules:b.modules.map(m=>({...m,healthy:m.fault==='none'})),legacy:true};
  if(b.decision){b.decision.id=b.decision.id||'legacy-decision-'+b.id;if(b.stage===5)b.status='Oriented';}
+ b.signatures=signatureRecords(b);
  return b;
 }
 function metrics(b){return {soh:b.soh,age:b.age,cycles:b.cycles,chemistry:b.chemistry,resistance:b.resistance,maxResistance:b.maxResistance};}
@@ -56,6 +58,7 @@ function apply(b,action,p,role,markets=[],centers=DEFAULT_CENTERS){
   requireState(b.stage===4&&!b.decision,'Une décision est déjà enregistrée ou la réception manque.');const rec=recommend(b,p.weights,markets);const chosen=rec.scores.find(s=>s.name===p.orientation&&s.eligible);if(!chosen)fail('Orientation non admissible.');
   b.decision={id:randomUUID(),orientation:p.orientation,score:chosen.score,justification:text(p.justification,'Justification de la décision',2000),at:new Date().toISOString(),recommendation:rec,inputSnapshot:decisionInput(b),markets:structuredClone(markets),actor:roles.recycler};b.stage=5;b.status='Oriented';event(b,role,action,'Décision validée · '+E.orientationInfo[p.orientation].label,b.decision.justification);
  }
+ b.signatures=signatureRecords(b);
  return b;
 }
 function projectBattery(b,role){const out=structuredClone(b);if(role!=='recycler'){

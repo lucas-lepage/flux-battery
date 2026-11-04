@@ -119,8 +119,12 @@ Une voiture de 17 × 9 pixels se déplace sur la ligne continue du parcours à c
 
 Le bouton Exporter le rapport remplace l’ancien export JSON. Chaque téléchargement génère un PDF daté à partir du passeport actuellement enregistré dans Neo4j, avec son numéro de révision. Il n’ajoute aucune donnée à la base. Le rapport reprend l’identification, les statistiques et les modules puis s’enrichit avec les signalements, réponses du responsable, destination, réception, inspection et décision au fil des actions. Les données réservées au recycleur restent réservées à son rapport.
 
-Aucune signature à l’import initial. La signature simulée du mécanicien apparaît après son signalement, celle du responsable après sa réponse et celle du recycleur après la réception. Trois signatures figurent en bas du rapport final. Les signatures sont des dessins génériques de démonstration, sans valeur d’authentification.
+Aucune signature à l’import initial. La signature simulée du mécanicien apparaît après son signalement, celle du responsable après sa réponse et celle du recycleur après la validation finale de sa décision. Trois signatures figurent en bas du rapport final. Les signatures sont des dessins génériques de démonstration, sans valeur d’authentification.
 
 PDFKit et les polices incluses dans assets/fonts génèrent le document sur Render. Aucune installation utilisateur ni modification de la base n’est nécessaire. Envoyer aussi package.json, package-lock.json, report.cjs et assets lors de la mise à jour ; Render installe la dépendance automatiquement via npm ci.
 
 Le titre Derniers événements devient Défi 02 · Derniers événements.
+
+Les signatures sont conservées dans le dossier (`signatures` dans le payload) et cumulées indépendamment du compte connecté. Les anciens dossiers retrouvent leurs signatures à partir des actions datées. Aucun visa du recycleur n’est ajouté avant sa décision finale. L’export utilise les signatures de la fiche complète avant de filtrer les informations selon le rôle.
+
+Le suivi affiche des libellés espacés sur une ou deux lignes et une silhouette de Cybertruck de 20 × 9 pixels.
