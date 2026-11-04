@@ -128,3 +128,9 @@ Le titre Derniers événements devient Défi 02 · Derniers événements.
 Les signatures sont conservées dans le dossier (`signatures` dans le payload) et cumulées indépendamment du compte connecté. Les anciens dossiers retrouvent leurs signatures à partir des actions datées. Aucun visa du recycleur n’est ajouté avant sa décision finale. L’export utilise les signatures de la fiche complète avant de filtrer les informations selon le rôle.
 
 Le suivi affiche des libellés espacés sur une ou deux lignes et une silhouette de Cybertruck de 20 × 9 pixels.
+
+## Batteries en cours et terminées
+
+Les espaces Responsable et Recycleur proposent les filtres En cours, Terminées et Toutes, avec un compteur pour chaque catégorie. En cours s’affiche par défaut. Une batterie rejoint Terminées après validation de la décision finale du recycleur (stade 5 du parcours). Le suivi, les signatures et le rapport restent accessibles. Aucun passeport n’est supprimé par ce classement.
+
+La recherche s’applique au filtre sélectionné. Le scan d’une batterie terminée ouvre sa catégorie automatiquement. Le mécanicien conserve la liste complète et ne voit pas ces filtres. Ce changement est uniquement dans l’interface et ne nécessite aucune modification de la base.

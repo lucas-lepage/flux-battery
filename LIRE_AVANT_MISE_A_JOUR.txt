@@ -24,3 +24,5 @@ COMPLÉMENT : les statuts et les quatre orientations sont affichés en français
 RAPPORT PDF : le bouton Exporter le rapport télécharge un PDF qui reprend les étapes déjà effectuées et leurs signatures progressives. Aucune signature au départ. La version complète possède les trois signatures.
 
 IMPORTANT : transmettre également le dossier assets (polices du PDF), report.cjs, package.json et package-lock.json. Le ZIP contient tout le projet. Render installera automatiquement la nouvelle dépendance PDF.
+
+FILTRES : le responsable et le recycleur disposent de En cours, Terminées et Toutes. Les batteries au stade de décision finale passent dans Terminées et restent consultables. Aucun filtre supplémentaire pour le mécanicien.
