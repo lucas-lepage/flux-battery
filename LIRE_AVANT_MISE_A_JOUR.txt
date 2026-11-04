@@ -1,0 +1,20 @@
+MISE À JOUR FLUX — INTERFACE, QR ET DÉFI 03
+
+1. Décompressez le ZIP.
+2. Sur GitHub, à la racine du dépôt flux-battery : Add file > Upload files.
+3. Glissez le contenu du dossier décompressé en conservant les dossiers dist, docs, tests et tools. Ne glissez pas le ZIP.
+4. Attendez tous les transferts puis Commit changes.
+5. Attendez le redéploiement Render. Sinon Manual Deploy > Deploy latest commit.
+6. Actualisez le site avec Ctrl+F5 pour recharger l’interface et le lecteur.
+
+Aucune variable Render à changer. Aucune commande Aura à lancer.
+
+AU PREMIER DÉMARRAGE : les cinq anciens exemples BP-001 à BP-005, reconnus par leur numéro de série initial, sont supprimés définitivement avec leurs données propres. Les autres passeports restent dans la base.
+
+SUPPRIMER UNE BATTERIE : compte Responsable > ouvrir le passeport > Gestion du passeport > Supprimer la batterie. Recopier l’identifiant et confirmer.
+
+DÉFI 03 : compte Recycleur > Défi 03 · Conseils. Les scores se débloquent après validation Waste, réception et inspection. Le mécanicien et le responsable ne voient pas ces conseils.
+
+NOUVEAUX QR : ouvrez dist/imprimer-qrcodes.html et imprimez les codes plus simples. Ils contiennent toutes les informations initiales et les cinq modules. Les anciens QR complets restent lisibles. Le bloc QR inutile dans la fiche a été retiré.
+
+CAMÉRA : ouvrir le site en HTTPS dans Safari ou Chrome et autoriser la caméra. La lecture depuis une photo PNG/JPEG a été vérifiée. La caméra réelle reste à essayer sur votre téléphone/tablette.

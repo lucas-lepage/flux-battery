@@ -7,6 +7,7 @@ async function seed(){
   if(b.requests.length)await query([{statement:'MATCH (b:Battery {id:$id}) UNWIND $requests AS x MERGE (r:StatusRequest {id:x.id}) ON CREATE SET r.state=x.state,r.note=x.note,r.at=x.at,r.garageName=x.garageName MERGE (r)-[:FOR]->(b)',parameters:{id:b.id,requests:b.requests}}]);
  }
  await query(['CREATE CONSTRAINT battery_serial IF NOT EXISTS FOR (n:Battery) REQUIRE n.serial IS UNIQUE']);
+ await require('./maintenance.cjs').removeInitialExamples();
 }
 if(require.main===module)seed().then(()=>console.log('Référentiels Neo4j prêts. Passeports existants conservés ; nouveaux passeports ajoutés par scan.')).catch(e=>{console.error(e.message);process.exitCode=1;}).finally(close);
 module.exports={seed};

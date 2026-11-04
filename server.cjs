@@ -39,7 +39,7 @@ async function importPassport(passport){
  catch(e){if(!e.message.includes('ConstraintValidation'))throw e;}
  const raced=await findPassport(passport);if(!raced)WFail('Le passeport n’a pas pu être ajouté. Réessayez.',409);if(raced.id===passport.id&&raced.serial!==passport.serial)WFail('Cet identifiant est déjà utilisé par une autre batterie.',409);return {created:false,battery:W.projectBattery(raced,'mechanic')};
 }
-const allowed={diagnostic:'mechanic',waste:'owner',refuse:'owner',transfer:'owner',receive:'recycler',inspection:'recycler',decision:'recycler',recommendation:'recycler'};
+const allowed={delete:'owner',diagnostic:'mechanic',waste:'owner',refuse:'owner',transfer:'owner',receive:'recycler',inspection:'recycler',decision:'recycler',recommendation:'recycler'};
 function createServer(){return http.createServer(async(req,res)=>{try{
  const url=new URL(req.url,'http://localhost');
  const qr=url.pathname.match(/^\/qr\/([A-Za-z0-9][A-Za-z0-9_-]{0,63})\.svg$/);
@@ -57,10 +57,10 @@ function createServer(){return http.createServer(async(req,res)=>{try{
   if(url.pathname==='/api/state'&&req.method==='GET')return send(res,200,W.projectState(await readState(),u.role,u.user));
   if(url.pathname==='/api/passports/lookup'&&req.method==='POST'){const p=await body(req),decoded=P.read(p.qrText),found=await findPassport(decoded.passport||{id:decoded.id});return send(res,200,{exists:!!found,battery:found?W.projectBattery(found,u.role):null,passport:!found&&u.role==='mechanic'?decoded.passport:null});}
   if(url.pathname==='/api/passports/import'&&req.method==='POST'){if(u.role!=='mechanic')return send(res,403,{error:'Seul le mécanicien peut ajouter un passeport par scan.'});const p=await body(req),decoded=P.read(p.qrText);if(!decoded.passport)WFail('Ce QR contient seulement un lien. Les données du passeport sont requises pour un ajout.');const result=await serialize('import:'+decoded.id,()=>importPassport(decoded.passport));return send(res,result.created?201:200,result);}
-  const m=url.pathname.match(/^\/api\/batteries\/([A-Za-z0-9][A-Za-z0-9_-]{0,63})\/(diagnostic|waste|refuse|transfer|receive|inspection|decision|recommendation)$/);
+  const m=url.pathname.match(/^\/api\/batteries\/([A-Za-z0-9][A-Za-z0-9_-]{0,63})\/(delete|diagnostic|waste|refuse|transfer|receive|inspection|decision|recommendation)$/);
   if(m&&req.method==='POST'){
    if(allowed[m[2]]!==u.role)return send(res,403,{error:'Action réservée à un autre rôle.'});const p=await body(req);
-   const result=await serialize(m[1],async()=>{const state=await readState(),b=state.batteries.find(x=>x.id===m[1]);if(!b)WFail('Batterie introuvable.',404);if(p.revision!==b.revision)WFail('Révision périmée. Actualisez la page.',409);if(m[2]==='recommendation')return W.recommend(b,p.weights,state.markets);
+   const result=await serialize(m[1],async()=>{const state=await readState(),b=state.batteries.find(x=>x.id===m[1]);if(!b)WFail('Batterie introuvable.',404);if(p.revision!==b.revision)WFail('Révision périmée. Actualisez la page.',409);if(m[2]==='delete'){if(p.confirmation!==b.id)WFail('Recopiez l’identifiant exact pour confirmer la suppression.');return require('./maintenance.cjs').deleteBattery(b.id,b.revision);}if(m[2]==='recommendation')return W.recommend(b,p.weights,state.markets);
     const expected=b.revision,clean=W.cleanPayload(m[2],p,b);W.apply(b,m[2],clean,u.role,state.markets,state.centers);await persist(b,expected,m[2]);return W.projectBattery(b,u.role);});return send(res,200,result);
   }
   return send(res,404,{error:'Route inconnue.'});
@@ -69,7 +69,7 @@ function createServer(){return http.createServer(async(req,res)=>{try{
  let name=decodeURIComponent(url.pathname);if(name==='/')name='/index.html';if(name==='/seed.json'){res.writeHead(403);return res.end('Accès via le serveur uniquement.');}
  const file=path.resolve(__dirname,'dist','.'+name),root=path.resolve(__dirname,'dist')+path.sep;
  if(!file.startsWith(root)){res.writeHead(403);return res.end();}if(!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404);return res.end('Introuvable');}
- const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.pptx':'application/vnd.openxmlformats-officedocument.presentationml.presentation'};
+ const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.txt':'text/plain; charset=utf-8','.pptx':'application/vnd.openxmlformats-officedocument.presentationml.presentation'};
  res.writeHead(200,{'Content-Type':types[path.extname(file)]||'application/octet-stream','X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Cache-Control':'no-cache'});if(req.method==='HEAD')return res.end();fs.createReadStream(file).pipe(res);
  }catch(e){send(res,e.status||400,{error:e.message.startsWith('Erreur Neo4j')?'Base Neo4j momentanément indisponible.':e.message});}});}
 if(require.main===module){validatePasswords();createServer().listen(Number(process.env.PORT||3000),process.env.HOST||'127.0.0.1');}
