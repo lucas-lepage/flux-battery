@@ -18,3 +18,9 @@ DÉFI 03 : compte Recycleur > Défi 03 · Conseils. Les scores se débloquent ap
 NOUVEAUX QR : ouvrez dist/imprimer-qrcodes.html et imprimez les codes plus simples. Ils contiennent toutes les informations initiales et les cinq modules. Les anciens QR complets restent lisibles. Le bloc QR inutile dans la fiche a été retiré.
 
 CAMÉRA : ouvrir le site en HTTPS dans Safari ou Chrome et autoriser la caméra. La lecture depuis une photo PNG/JPEG a été vérifiée. La caméra réelle reste à essayer sur votre téléphone/tablette.
+
+COMPLÉMENT : les statuts et les quatre orientations sont affichés en français. Après la décision, l’état devient Orientation validée. Les décisions déjà terminées sont corrigées automatiquement au démarrage. Une toute petite voiture indique la position sur la ligne du suivi.
+
+RAPPORT PDF : le bouton Exporter le rapport télécharge un PDF qui reprend les étapes déjà effectuées et leurs signatures progressives. Aucune signature au départ. La version complète possède les trois signatures.
+
+IMPORTANT : transmettre également le dossier assets (polices du PDF), report.cjs, package.json et package-lock.json. Le ZIP contient tout le projet. Render installera automatiquement la nouvelle dépendance PDF.

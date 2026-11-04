@@ -1,5 +1,11 @@
 (function(root){
 const orientations=['Reuse','Remanufacture','Repurpose','Recycle'];
+const orientationInfo={
+ Reuse:{label:'Réemploi pour le même usage',description:'Réutiliser la batterie pour son usage initial, par exemple dans un autre véhicule compatible, après les contrôles nécessaires.',next:'Contrôler la sécurité, la compatibilité et les performances avant sa remise en service.'},
+ Remanufacture:{label:'Reconditionnement de la batterie',description:'Remettre la batterie en état en réparant ou remplaçant les modules défaillants, puis en contrôlant le pack complet.',next:'Identifier les modules à remplacer, remettre le pack en état et effectuer les essais de validation.'},
+ Repurpose:{label:'Seconde vie pour un autre usage',description:'Affecter la batterie à une application différente, par exemple le stockage stationnaire d’énergie, si ses performances restent adaptées.',next:'Vérifier les besoins du nouvel usage puis adapter l’intégration et les protections de la batterie.'},
+ Recycle:{label:'Recyclage des matériaux',description:'Orienter la batterie vers une filière spécialisée pour récupérer les matériaux lorsque les autres usages ne sont pas retenus.',next:'Confier la batterie à la filière agréée pour son traitement et la récupération des matériaux.'}
+};
 const defaults={health:40,demand:30,value:20,environment:10};
 function clamp(x){return Math.max(0,Math.min(100,x));}
 function recommend(b,weights=defaults,markets=[]){
@@ -29,5 +35,5 @@ function recommend(b,weights=defaults,markets=[]){
  return {title:best.name,blocked:false,critical,reason:critical?'Recyclage orienté vers une évaluation spécialisée : validation humaine obligatoire.':`Meilleure orientation admissible : ${best.score}/100.`,scores,weights:w,rules:[`SOH du pack : ${b.soh} % ; module le plus faible : ${weakest} %.`,`Âge : ${b.age} ans ; chimie : ${b.chemistry}.`,`Résistance : ${b.resistance} mΩ ; référence déclarée : ${b.maxResistance} mΩ.`,`Défaut déclaré : ${b.fault}. Les exclusions sont appliquées avant les scores.`,'Score = somme des notes (0–100) × poids / somme des poids.','Notes économiques et environnementales : hypothèses pédagogiques fixes, sans estimation monétaire ni ACV.'],version:'rules-1.0'};
 }
 function validateDiagnostic(b){for(const [k,min,max] of [['soh',0,100],['age',0,40],['resistance',0,10000],['maxResistance',.001,10000]])if(!Number.isFinite(Number(b[k]))||Number(b[k])<min||Number(b[k])>max)throw Error('Valeur invalide : '+k);if(!['NMC','LFP'].includes(b.chemistry)||!['none','minor','major','critical'].includes(b.fault))throw Error('Diagnostic invalide.');if(!Array.isArray(b.modules)||b.modules.length!==5)throw Error('Le diagnostic doit comporter cinq modules.');for(const m of b.modules){if(!Number.isFinite(m.soh)||m.soh<0||m.soh>100||!Number.isFinite(m.resistance)||m.resistance<0||!['none','minor','major','critical'].includes(m.fault))throw Error('Module invalide.');}return true;}
-const api={recommend,defaults,orientations,validateDiagnostic};if(typeof module!=='undefined')module.exports=api;else root.FluxEngine=api;
+const api={recommend,defaults,orientations,orientationInfo,validateDiagnostic};if(typeof module!=='undefined')module.exports=api;else root.FluxEngine=api;
 })(typeof window!=='undefined'?window:globalThis);

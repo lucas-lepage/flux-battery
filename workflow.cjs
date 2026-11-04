@@ -10,7 +10,7 @@ function normalize(b){
  if(b.stage===1&&!b.requests.some(r=>r.state==='PENDING'))b.requests.push({id:'legacy-request-'+b.id,state:'PENDING',fromStatus:'Original',toStatus:'Waste',note:b.diagnostic?.note||'Signalement du garagiste',at:b.diagnostic?.at||b.events?.at(-1)?.at||new Date().toISOString(),garageName:'Garage Flux',requestedBy:'mechanic'});
  if(b.transfer){b.transfer.id=b.transfer.id||'legacy-transfer-'+b.id;b.transfer.centerId=b.transfer.centerId||DEFAULT_CENTERS.find(c=>c.name===b.transfer.destination)?.id||'';b.transfer.state=b.stage>=4?'RECEIVED':'PLANNED';}
  if(b.inspected&&!b.inspection)b.inspection={id:'legacy-inspection-'+b.id,at:b.events?.findLast(e=>e.title==='Inspection du centre de tri')?.at||new Date().toISOString(),note:'Inspection antérieure conservée',metrics:metrics(b),modules:b.modules.map(m=>({...m,healthy:m.fault==='none'})),legacy:true};
- if(b.decision)b.decision.id=b.decision.id||'legacy-decision-'+b.id;
+ if(b.decision){b.decision.id=b.decision.id||'legacy-decision-'+b.id;if(b.stage===5)b.status='Oriented';}
  return b;
 }
 function metrics(b){return {soh:b.soh,age:b.age,cycles:b.cycles,chemistry:b.chemistry,resistance:b.resistance,maxResistance:b.maxResistance};}
@@ -54,7 +54,7 @@ function apply(b,action,p,role,markets=[],centers=DEFAULT_CENTERS){
   E.validateDiagnostic({...b,...inspection.metrics,modules:inspection.modules});b.inspection=inspection;b.inspected=true;event(b,role,action,'Inspection du centre de tri',inspection.note);
  }else if(action==='decision'){
   requireState(b.stage===4&&!b.decision,'Une décision est déjà enregistrée ou la réception manque.');const rec=recommend(b,p.weights,markets);const chosen=rec.scores.find(s=>s.name===p.orientation&&s.eligible);if(!chosen)fail('Orientation non admissible.');
-  b.decision={id:randomUUID(),orientation:p.orientation,score:chosen.score,justification:text(p.justification,'Justification de la décision',2000),at:new Date().toISOString(),recommendation:rec,inputSnapshot:decisionInput(b),markets:structuredClone(markets),actor:roles.recycler};b.stage=5;event(b,role,action,'Décision validée · '+p.orientation,b.decision.justification);
+  b.decision={id:randomUUID(),orientation:p.orientation,score:chosen.score,justification:text(p.justification,'Justification de la décision',2000),at:new Date().toISOString(),recommendation:rec,inputSnapshot:decisionInput(b),markets:structuredClone(markets),actor:roles.recycler};b.stage=5;b.status='Oriented';event(b,role,action,'Décision validée · '+E.orientationInfo[p.orientation].label,b.decision.justification);
  }
  return b;
 }

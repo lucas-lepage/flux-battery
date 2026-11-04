@@ -19,3 +19,9 @@ GET /api/state renvoie une projection adaptée au rôle. L'historique reste disp
 `POST /api/batteries/:id/delete` avec `{ "revision": 0, "confirmation": "IDENTIFIANT_EXACT" }`. Réponse `{ "deleted": true, "id": "IDENTIFIANT_EXACT" }`. Rôle incorrect : 403, confirmation incorrecte : 400, révision périmée : 409. Suppression atomique des nœuds propres à la batterie ; les références partagées sont conservées. La migration `remove-initial-demo-batteries-v1` retire les cinq anciens exemples une seule fois.
 
 Le lecteur accepte les QR compacts `FLUX2:` et les anciens JSON `FLUX-PASSPORT` v1. Les valeurs sont validées avec le même schéma. Le fichier JSON des exemples garde son format lisible ; seul le contenu encodé dans les images est compacté.
+
+Après validation de la décision, `Battery.status` et le payload passent à `Oriented` (affichage : Orientation validée). Le démarrage corrige les anciens passeports au stade 5 disposant déjà d’une décision. Les orientations conservent leurs codes internes pour compatibilité avec les décisions et marchés existants.
+
+## Rapport PDF progressif
+
+`GET /api/batteries/:id/report.pdf`, session requise pour les trois rôles. Génère un instantané du passeport courant en appliquant la projection du rôle connecté. Réponse application/pdf avec Content-Disposition attachment ; 401 sans connexion, 404 si la batterie est absente. Les signatures simulées proviennent uniquement des actions déjà enregistrées. Aucun changement Neo4j n’est produit par l’export.

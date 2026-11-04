@@ -108,3 +108,19 @@ Compte Responsable → ouvrir le passeport → Gestion du passeport → Supprime
 Interface bleu nuit et blanc, navigation métier, boutons prioritaires plus visibles et dispositions adaptées aux écrans étroits. Le bloc QR redondant de la fiche a été retiré. Les QR sont uniquement dans la page d’impression et ses fichiers associés.
 
 Le scan caméra utilise le cadre complet et privilégie la caméra arrière, avec repli sur les caméras disponibles. La lecture des images utilise jsQR à la résolution d’origine, puis html5-qrcode et le décodeur natif du navigateur en secours. Les décodeurs sont livrés avec le site. Les photos sont traitées sur l’appareil, sans envoi d’image au serveur. Le lien HTTPS et l’autorisation caméra restent nécessaires pour une prise de vue en direct.
+
+## Statuts et orientations en français
+
+L’application affiche En service, Hors d’usage puis Orientation validée. Le dernier état est enregistré dans Neo4j (`Oriented`) à la validation de la décision. Les anciens passeports avec une décision terminée sont mis à jour au démarrage, sans modifier leur historique ni leurs scores. Ce dernier état atteste la décision, pas la réalisation du traitement physique. Les codes internes des quatre orientations restent inchangés pour conserver les anciennes décisions ; leurs noms et explications affichés sont en français.
+
+Une voiture de 17 × 9 pixels se déplace sur la ligne continue du parcours à chaque avancement. Le mouvement respecte le réglage de réduction des animations du navigateur.
+
+## Exporter le rapport PDF
+
+Le bouton Exporter le rapport remplace l’ancien export JSON. Chaque téléchargement génère un PDF daté à partir du passeport actuellement enregistré dans Neo4j, avec son numéro de révision. Il n’ajoute aucune donnée à la base. Le rapport reprend l’identification, les statistiques et les modules puis s’enrichit avec les signalements, réponses du responsable, destination, réception, inspection et décision au fil des actions. Les données réservées au recycleur restent réservées à son rapport.
+
+Aucune signature à l’import initial. La signature simulée du mécanicien apparaît après son signalement, celle du responsable après sa réponse et celle du recycleur après la réception. Trois signatures figurent en bas du rapport final. Les signatures sont des dessins génériques de démonstration, sans valeur d’authentification.
+
+PDFKit et les polices incluses dans assets/fonts génèrent le document sur Render. Aucune installation utilisateur ni modification de la base n’est nécessaire. Envoyer aussi package.json, package-lock.json, report.cjs et assets lors de la mise à jour ; Render installe la dépendance automatiquement via npm ci.
+
+Le titre Derniers événements devient Défi 02 · Derniers événements.
